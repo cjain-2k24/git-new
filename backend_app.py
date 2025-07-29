@@ -34,4 +34,4 @@ def submit_todo_item():
     return jsonify(response), 201
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # Make sure backend is on 5001 if frontend is on 5000
+    app.run(debug=True, port=5000)  # Make sure backend is on 5001 if frontend is on 5000
