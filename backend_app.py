@@ -9,8 +9,8 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 app = Flask(__name__)
 client = MongoClient(MONGO_URI)
-db = client.todo_db
-collection = db.todo_items
+db = client["Chintan"]
+collection = db["Chintan-DB-Collection"]
 
 @app.route('/submittodoitem', methods=['POST'])
 def submit_todo_item():
@@ -21,9 +21,24 @@ def submit_todo_item():
         "itemUUID": request.form.get("itemUUID"),
         "itemHash": request.form.get("itemHash")
     }
-    collection.insert_one(data)
-    return jsonify({"message": "Item stored successfully", "data": data}), 201
+
+    # Insert into MongoDB and get inserted_id
+    result = collection.insert_one(data)
+
+    # Don't return the original 'data' because it has a non-serializable ObjectId
+    response = {
+        "message": "Item stored successfully",
+        "inserted_id": str(result.inserted_id),  # ✅ Convert ObjectId to string
+        "data": {
+            "itemName": data["itemName"],
+            "itemDescription": data["itemDescription"],
+            "itemId": data["itemId"],
+            "itemUUID": data["itemUUID"],
+            "itemHash": data["itemHash"]
+        }
+    }
+    return jsonify(response), 201
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000)  # ✅ backend is on 5000
 
