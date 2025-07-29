@@ -20,10 +20,18 @@ def submit_todo_item():
         "itemId": request.form.get("itemId"),
         "itemUUID": request.form.get("itemUUID"),
         "itemHash": request.form.get("itemHash")
+        }
+
+    # Insert into MongoDB and get inserted_id
+    result = collection.insert_one(data)
+
+    # Return a serializable response
+    response = {
+        "message": "Item stored successfully",
+        "inserted_id": str(result.inserted_id),  # ✅ Convert ObjectId to string
+        "data": data
     }
-    collection.insert_one(data)
-    return jsonify({"message": "Item stored successfully", "data": data}), 201
+    return jsonify(response), 201
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-
+    app.run(debug=True, port=5001)  # Make sure backend is on 5001 if frontend is on 5000
