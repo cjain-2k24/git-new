@@ -9,8 +9,8 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 app = Flask(__name__)
 client = MongoClient(MONGO_URI)
-db = client.todo_db
-collection = db.todo_items
+db = client["Chintan"]
+collection = db["Chintan-DB-Collection"]
 
 @app.route('/submittodoitem', methods=['POST'])
 def submit_todo_item():
@@ -26,5 +26,4 @@ def submit_todo_item():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
 
